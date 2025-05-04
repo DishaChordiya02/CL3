@@ -35,6 +35,40 @@ server.serve_forever()
 
 # practical2--------------------------------------------------------------
 
+#server.py
+from xmlrpc.server import SimpleXMLRPCServer
+
+def perform_operation(x, y, operation):
+    if operation == 'add':
+        return x + y
+    elif operation == 'subtract':
+        return x - y
+    elif operation == 'multiply':
+        return x * y
+    elif operation == 'divide':
+        return x / y if y != 0 else "Error: Division by zero"
+    else:
+        return "Invalid operation"
+
+server = SimpleXMLRPCServer(("localhost", 8000))
+print("Server is listening on port 8000...")
+server.register_function(perform_operation, "perform_operation")
+server.serve_forever()
+
+#client.py
+import xmlrpc.client
+
+server = xmlrpc.client.ServerProxy("http://localhost:8000/")
+
+x = int(input("Enter first number: "))
+y = int(input("Enter second number: "))
+operation = input("Enter operation (add, subtract, multiply, divide): ")
+
+result = server.perform_operation(x, y, operation)
+print("Result from server:", result)
+--------------------------------------------------------------
+# practical3--------------------------------------------------------------
+
 # client.py
 
 import Pyro4
@@ -71,7 +105,7 @@ print("Object URI:", uri)
 daemon.requestLoop()
 
 
-# practical3----------------------------------------------------------------
+# practical 4...5...6....7----------------------------------------------------------------
 
 # char_count.py
 
@@ -105,7 +139,7 @@ class MRWordCount(MRJob):
 if __name__ == '__main__':
     MRWordCount.run()
 
-# practical4-------------------------------------------------------------------------
+# practical8-------------------------------------------------------------------------
 
 
 # load_balnacer.py
@@ -245,7 +279,7 @@ for i in range(10):  # Simulating 10 client requests
     lb.distribute_request(algorithm="least_connections")  # You can change the algorithm here
 
 
-# practical5-----------------------------------------------------------------
+# practical 9-----------------------------------------------------------------
 
 # clonal.py
 import random
@@ -316,10 +350,10 @@ def clonal_selection_algorithm():
 best_solution = clonal_selection_algorithm()
 print(f"Best solution found: {best_solution}")
 
-# practial6----------------------------------------------------
+# practial10-----------------------------------------------------
 # None: The code for practical6 is not provided in the original snippet. Please provide the code for practical6 if you want me to include it here.
 
-# practical7----------------------------------------------------------
+# practical11----------------------------------------------------------
 
 # damage.py
 
@@ -421,7 +455,7 @@ y_pred = aipr.predict(X_test, population)
 accuracy = accuracy_score(y_test, y_pred)
 print(f"Classification Accuracy: {accuracy * 100:.2f}%")
 
-# practical8--------------------------------------------------------------------------
+# practical12--------------------------------------------------------------------------
 
 # DEAP.py
 # pip install deap
@@ -471,7 +505,7 @@ if __name__ == "__main__":
     print("Best individual is: %s\nwith fitness: %s" % (hof[0], hof[0].fitness.values))
 
 
-# practical9----------------------------------------------------------------------
+# practical idk----------------------------------------------------------------------
 
 # temp.py
 
@@ -507,7 +541,7 @@ class MRCoolestHottestYear(MRJob):
 if __name__ == '__main__':
     MRCoolestHottestYear.run()
 
-# practical10------------------------------------------------------------------------------------
+# practical 13------------------------------------------------------------------------------------
 
 # ant.py
 
@@ -616,3 +650,4 @@ best_route, best_length = ant_colony_optimization(distances, num_ants, num_itera
 print("Best route:", best_route)
 print("Best route length:", best_length)
 
+#15,16,7 repeated
