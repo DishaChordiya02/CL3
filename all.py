@@ -104,8 +104,43 @@ print("Object URI:", uri)
 
 daemon.requestLoop()
 
+# practical 4 ----------------------------------------------------------------
 
-# practical 4...5...6....7----------------------------------------------------------------
+#server.py
+import Pyro5.api
+
+@Pyro5.api.expose
+class PalindromeChecker:
+    def is_palindrome(self, text):
+        cleaned = ''.join(filter(str.isalnum, text)).lower()
+        return cleaned == cleaned[::-1]
+
+def main():
+    daemon = Pyro5.server.Daemon()                   # Start Pyro5 server
+    uri = daemon.register(PalindromeChecker)         # Register the class
+    print("Ready. Object URI =", uri)
+    daemon.requestLoop()                             # Keep server running
+
+if __name__ == "__main__":
+    main()
+
+#client.py
+import Pyro5.api
+
+def main():
+    uri = input("Enter the Pyro URI of the server: ")  # e.g. PYRO:obj_xxx@localhost:xxxx
+    remote_checker = Pyro5.api.Proxy(uri)              # Create proxy object
+
+    text = input("Enter a string to check: ")
+    result = remote_checker.is_palindrome(text)
+
+    print(f"'{text}' is a palindrome: {result}")
+
+if __name__ == "__main__":
+    main()
+
+
+# practical 5----------------------------------------------------------------
 
 # char_count.py
 
@@ -138,6 +173,36 @@ class MRWordCount(MRJob):
 
 if __name__ == '__main__':
     MRWordCount.run()
+
+# practical 6 drop ----------------------------------------------------------------
+
+# practical7-------------------------------------------------------------------------
+
+#mapper.py
+#!/usr/bin/env python3
+import sys
+import re
+
+# Read input from STDIN
+for line in sys.stdin:
+    # Normalize case and remove punctuation
+    words = re.findall(r'\b\w+\b', line.lower())
+    for word in words:
+        print(f"{word}\t1")
+
+#reducer.py
+#!/usr/bin/env python3
+import sys
+
+unique_words = set()
+
+# Read key-value pairs from STDIN
+for line in sys.stdin:
+    word, _ = line.strip().split('\t', 1)
+    unique_words.add(word)
+
+# Output total number of unique words
+print(f"Total Unique Words\t{len(unique_words)}")
 
 # practical8-------------------------------------------------------------------------
 
@@ -650,4 +715,4 @@ best_route, best_length = ant_colony_optimization(distances, num_ants, num_itera
 print("Best route:", best_route)
 print("Best route length:", best_length)
 
-#15,16,7 repeated
+#14==1 ,15=5 ,16==3 repeated
